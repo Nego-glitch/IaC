@@ -14,6 +14,10 @@ on:
       - 'staging'
       - 'prod'
 
+env:
+  creds: ${{ secrets.AZURE_CREDENTIALS }}
+  WORKING_DIR: ./deployments
+
 jobs:
   terraform:
     name: 'Terraform'
@@ -29,7 +33,7 @@ jobs:
       - name: 'Azure Login'
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
 
       - name: 'Terraform Init'
         run: terraform init
