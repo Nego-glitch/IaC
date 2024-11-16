@@ -15,7 +15,6 @@ on:
       - 'prod'
 
 env:
-  creds: ${{ secrets.AZURE_CREDENTIALS }}
   WORKING_DIR: ./deployments
 
 jobs:
