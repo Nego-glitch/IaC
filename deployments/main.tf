@@ -71,7 +71,7 @@ module "app_service" {
   app_settings            = var.app_settings
 }
 
-# Load Balancer Resources
+# Load Balancer Resources (maybe needs module)
 resource "azurerm_public_ip" "public_ip" {
   name                = "public-ip-${local.unique_name}"
   location            = var.location
