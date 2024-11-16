@@ -29,6 +29,7 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+        continue-on-error: false  # Ensure the workflow stops if this step fails
 
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v1    
