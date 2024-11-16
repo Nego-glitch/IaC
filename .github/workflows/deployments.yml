@@ -19,20 +19,21 @@ env:
 
 jobs:
   terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
 
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v2
 
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v1
+        working-directory: ${{ env.WORKING_DIR }}
+
       - name: 'Azure Login'
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-        continue-on-error: false  # Ensure the workflow stops if this step fails
-
-      - name: 'Setup Terraform'
-        uses: hashicorp/setup-terraform@v1    
 
       - name: 'Terraform Init'
         run: terraform init
@@ -58,6 +59,10 @@ jobs:
         run: terraform validate
         working-directory: ${{ env.WORKING_DIR }}
 
+      - name: 'Terraform Lint'
+        run: tflint
+        working-directory: ${{ env.WORKING_DIR }}
+
       - name: 'Terraform Security Check'
         run: tfsec .
         working-directory: ${{ env.WORKING_DIR }}
@@ -75,5 +80,5 @@ jobs:
         if: github.ref == 'refs/heads/prod'
         run: terraform apply tfplan
         env:
-          TF_VAR_approval: ${{ secrets.TF_VAR_APPROVAL }}  
+          TF_VAR_approval: ${{ secrets.TF_VAR_APPROVAL }}
         working-directory: ${{ env.WORKING_DIR }}
