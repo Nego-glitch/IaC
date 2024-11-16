@@ -28,7 +28,6 @@ jobs:
 
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v1
-        working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Azure Login'
         uses: azure/login@v1
