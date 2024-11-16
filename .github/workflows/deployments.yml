@@ -35,7 +35,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 'Terraform Init'
-        run: terraform init
+        run: terraform init -reconfigure
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform select or create workspace'
