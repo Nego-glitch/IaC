@@ -1,0 +1,60 @@
+name: deployments
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'dev'
+      - 'staging'
+      - 'prod'
+  pull_request:
+    branches:
+      - 'main'
+      - 'dev'
+      - 'staging'
+      - 'prod'
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v1
+
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Terraform Init'
+        run: terraform init
+
+      - name: 'Terraform Format'
+        run: terraform fmt -check
+
+      - name: 'Terraform Validate'
+        run: terraform validate
+
+      - name: 'Terraform Lint'
+        run: tflint
+
+      - name: 'Terraform Security Check'
+        run: tfsec .
+
+      - name: 'Terraform Plan'
+        run: terraform plan -out=tfplan
+
+      - name: 'Terraform Apply'
+        if: github.ref != 'refs/heads/prod'
+        run: terraform apply -auto-approve tfplan
+
+      - name: 'Terraform Apply (Prod)'
+        if: github.ref == 'refs/heads/prod'
+        run: terraform apply tfplan
+        env:
+          TF_VAR_approval: ${{ secrets.TF_VAR_APPROVAL }}    
