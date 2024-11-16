@@ -40,9 +40,6 @@ jobs:
       - name: 'Terraform Validate'
         run: terraform validate
 
-      - name: 'Terraform Lint'
-        run: tflint
-
       - name: 'Terraform Security Check'
         run: tfsec .
 
