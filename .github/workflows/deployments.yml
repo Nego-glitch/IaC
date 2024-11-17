@@ -39,7 +39,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform select or create workspace'
-        run: 
+        run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             terraform workspace select main || terraform workspace new main
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
@@ -48,6 +48,7 @@ jobs:
             terraform workspace select staging || terraform workspace new staging
           elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
             terraform workspace select prod || terraform workspace new prod
+          fi
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform Format'
@@ -73,6 +74,13 @@ jobs:
       - name: 'Terraform Apply'
         if: github.ref != 'refs/heads/prod'
         run: terraform apply -auto-approve tfplan
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform Apply (Main)'
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply tfplan
+        env:
+          TF_VAR_approval: ${{ secrets.TF_VAR_APPROVAL }}
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform Apply (Prod)'

@@ -2,7 +2,7 @@ data "terraform_remote_state" "global" {
   backend = "azurerm"
   config = {
     resource_group_name   = "rg-backend-valerija-operaterra"
-    storage_account_name  = "sabeotwqlq7ed"
+    storage_account_name  = "sabeot93r17j7"
     container_name        = "tfstate"
     key                   = "global.terraform.tfstate"                
   }
